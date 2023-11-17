@@ -1,14 +1,16 @@
-import { useState, useRef, useEffect } from 'react';
 import * as faceapi from 'face-api.js';
+import { useState, useRef, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const Image = () => {
+  const navigate = useNavigate();
   const [img, setImg] = useState(null);
   const imageRef = useRef();
   const canvasRef = useRef();
 
   // load from useEffect
   useEffect(() => {
-    imageRef && loadModels();
+    img && imageRef && loadModels();
   }, []);
 
   // load models
@@ -51,23 +53,46 @@ const Image = () => {
   };
 
   return (
-    <div
-      style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}
-    >
-      <input
-        type='file'
-        onChange={(e) => setImg(e.target.files[0])}
-      />
-      <img
-        src={img ? URL.createObjectURL(img) : ''}
-        alt='img'
-        style={{ marginTop: '20px' }}
-        ref={imageRef}
-      />
-      <canvas
-        ref={canvasRef}
-        className='canvas-img'
-      />
+    <div className='flex justify-evenly gap-20 py-10'>
+      <div className='flex flex-col justify-center gap-10'>
+        <input
+          type='file'
+          onChange={(e) => setImg(e.target.files[0])}
+        />
+        <span
+          className='bg-[#064889] hover:bg-[#1d4874] hover:cursor-pointer flex items-center justify-center text-2xl h-14 rounded-xl'
+          onClick={() => {
+            navigate(0, { replace: true });
+          }}
+        >
+          Reset
+        </span>
+        <span
+          className='bg-[#064889] hover:bg-[#1d4874] hover:cursor-pointer flex items-center justify-center text-2xl h-14 rounded-xl'
+          onClick={() => {
+            navigate('/');
+            navigate(0, { replace: true });
+          }}
+        >
+          Home
+        </span>
+      </div>
+      <div className='max-w-[56%] max-h-[600px]'>
+        <img
+          src={
+            img
+              ? URL.createObjectURL(img)
+              : 'https://img.freepik.com/premium-vector/photo-icon-picture-icon-image-sign-symbol-vector-illustration_64749-4409.jpg'
+          }
+          alt='img'
+          ref={imageRef}
+          className='h-full object-cover'
+        />
+        <canvas
+          ref={canvasRef}
+          className='absolute top-0 mt-10'
+        />
+      </div>
     </div>
   );
 };

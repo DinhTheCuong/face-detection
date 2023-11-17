@@ -1,7 +1,9 @@
-import { useRef, useEffect } from 'react';
 import * as faceapi from 'face-api.js';
+import { useRef, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const Video = () => {
+  const navigate = useNavigate();
   const videoRef = useRef();
   const canvasRef = useRef();
 
@@ -30,7 +32,6 @@ const Video = () => {
       faceapi.nets.faceLandmark68Net.loadFromUri('./models'),
       faceapi.nets.faceRecognitionNet.loadFromUri('./models'),
       faceapi.nets.faceExpressionNet.loadFromUri('./models'),
-      faceapi.loadMtcnnModel('/models'),
     ]).then(() => {
       faceMyDetect();
     });
@@ -48,13 +49,13 @@ const Video = () => {
       );
 
       faceapi.matchDimensions(canvasRef.current, {
-        width: 940,
-        height: 650,
+        width: 640,
+        height: 480,
       });
 
       const resized = faceapi.resizeResults(detections, {
-        width: 940,
-        height: 650,
+        width: 640,
+        height: 480,
       });
 
       faceapi.draw.drawDetections(canvasRef.current, resized);
@@ -63,20 +64,37 @@ const Video = () => {
   };
 
   return (
-    <div className='video'>
-      <div className='frame'>
+    <div className='w-full flex items-center justify-evenly my-20'>
+      <div className='w-[120px] flex flex-col justify-center gap-10'>
+        <span
+          className='bg-[#064889] hover:bg-[#1d4874] hover:cursor-pointer flex items-center justify-center text-2xl h-14 rounded-xl'
+          onClick={() => {
+            navigate(0, { replace: true });
+          }}
+        >
+          Refresh
+        </span>
+        <span
+          className='bg-[#064889] hover:bg-[#1d4874] hover:cursor-pointer flex items-center justify-center text-2xl h-14 rounded-xl'
+          onClick={() => {
+            navigate('/');
+            navigate(0, { replace: true });
+          }}
+        >
+          Home
+        </span>
+      </div>
+      <div>
         <video
           crossOrigin='anonymous'
           ref={videoRef}
           autoPlay
         />
+        <canvas
+          ref={canvasRef}
+          className='absolute top-20'
+        />
       </div>
-      <canvas
-        ref={canvasRef}
-        className='canvas-vid'
-        width='940'
-        height='650'
-      />
     </div>
   );
 };
