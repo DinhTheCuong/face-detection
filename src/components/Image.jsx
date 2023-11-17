@@ -10,7 +10,7 @@ const Image = () => {
 
   // load from useEffect
   useEffect(() => {
-    img && imageRef && loadModels();
+    imageRef && loadModels();
   }, []);
 
   // load models
