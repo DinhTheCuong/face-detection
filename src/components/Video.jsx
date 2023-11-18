@@ -1,9 +1,10 @@
 import * as faceapi from 'face-api.js';
-import { useRef, useEffect } from 'react';
+import { useRef, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 const Video = () => {
   const navigate = useNavigate();
+  const [glass, setGlass] = useState(false);
   const videoRef = useRef();
   const canvasRef = useRef();
 
@@ -43,20 +44,46 @@ const Video = () => {
         .detectAllFaces(videoRef.current, new faceapi.TinyFaceDetectorOptions())
         .withFaceLandmarks();
 
+      // check if a person is wear a glasses
+      detections.map((detection, index) => {
+        if (
+          detection.landmarks &&
+          detection.landmarks.getLeftEye &&
+          detection.landmarks.getRightEye
+        ) {
+          const leftEye = detection.landmarks.getLeftEye();
+          const rightEye = detection.landmarks.getRightEye();
+
+          // check if the distance between the eyes suggests the person is wearing glasses
+          const eyeDistance = Math.sqrt(
+            Math.pow(rightEye[0]._x - leftEye[3]._x, 2) +
+              Math.pow(rightEye[0]._y - leftEye[3]._y, 2),
+          );
+          console.log(eyeDistance);
+
+          if (35 < eyeDistance && eyeDistance < 90) {
+            setGlass(true);
+            console.log(`Person ${index + 1} is wearing glasses`);
+          } else {
+            console.log('Not wearing glasses or eyes are close together.');
+          }
+          return;
+        }
+      });
+
       // draw face detections
       canvasRef.current.innerHtml = faceapi.createCanvasFromMedia(
         videoRef.current,
       );
 
-      faceapi.matchDimensions(canvasRef.current, {
+      const displaySize = {
         width: 640,
         height: 480,
-      });
+      };
 
-      const resized = faceapi.resizeResults(detections, {
-        width: 640,
-        height: 480,
-      });
+      faceapi.matchDimensions(canvasRef.current, displaySize);
+
+      const resized = faceapi.resizeResults(detections, displaySize);
 
       faceapi.draw.drawDetections(canvasRef.current, resized);
       faceapi.draw.drawFaceLandmarks(canvasRef.current, resized);
@@ -83,12 +110,16 @@ const Video = () => {
         >
           Home
         </span>
+        {glass && <span>Person is wearing glasses</span>}
       </div>
       <div>
         <video
           crossOrigin='anonymous'
           ref={videoRef}
           autoPlay
+          onChange={() => {
+            setGlass(false);
+          }}
         />
         <canvas
           ref={canvasRef}
