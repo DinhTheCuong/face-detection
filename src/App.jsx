@@ -14,7 +14,7 @@ function App() {
           element={<Home />}
         />
         <Route
-          path='/regist'
+          path='/compare'
           element={<RegistFace />}
         />
         <Route
