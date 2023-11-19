@@ -31,7 +31,7 @@ const Home = () => {
         </div>
         <div
           className='bg-[#064889] hover:bg-[#1d4874] hover:cursor-pointer w-[400px] h-[88px] flex items-center justify-start gap-10 pl-16 rounded-xl'
-          onClick={() => navigate('/regist')}
+          onClick={() => navigate('/compare')}
         >
           <MdOutlineCompare className='text-6xl' />
           <span className='text-3xl'>COMPARE</span>
