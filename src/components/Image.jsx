@@ -4,8 +4,10 @@ import { useNavigate } from 'react-router-dom';
 
 const Image = () => {
   const navigate = useNavigate();
+
   const [img, setImg] = useState(null);
   const [glass, setGlass] = useState(false);
+
   const imageRef = useRef();
   const canvasRef = useRef();
 
@@ -48,8 +50,6 @@ const Image = () => {
             Math.pow(rightEye[0]._x - leftEye[3]._x, 2) +
               Math.pow(rightEye[0]._y - leftEye[3]._y, 2),
           );
-
-          console.log(eyeDistance);
 
           if (19 < eyeDistance && eyeDistance < 90) {
             setGlass(true);
