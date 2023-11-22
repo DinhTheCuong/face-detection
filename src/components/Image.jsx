@@ -22,8 +22,6 @@ const Image = () => {
       faceapi.nets.tinyFaceDetector.loadFromUri('./models'),
       faceapi.nets.faceLandmark68Net.loadFromUri('./models'),
       faceapi.nets.faceRecognitionNet.loadFromUri('./models'),
-      faceapi.nets.faceExpressionNet.loadFromUri('./models'),
-      faceapi.loadMtcnnModel('/models'),
     ]).then(() => {
       faceMyDetect();
     });
@@ -33,10 +31,11 @@ const Image = () => {
     setInterval(async () => {
       const detections = await faceapi
         .detectAllFaces(imageRef.current, new faceapi.TinyFaceDetectorOptions())
-        .withFaceLandmarks();
-
+        .withFaceLandmarks()
+        .withFaceDescriptors();
+        
       // check if a person is wear a glasses
-      detections.map((detection, index) => {
+      detections.map((detection) => {
         if (
           detection.landmarks &&
           detection.landmarks.getLeftEye &&
@@ -53,9 +52,6 @@ const Image = () => {
 
           if (19 < eyeDistance && eyeDistance < 90) {
             setGlass(true);
-            console.log(`Person ${index + 1} is wearing glasses`);
-          } else {
-            console.log('Not wearing glasses or eyes are close together.');
           }
           return;
         }
