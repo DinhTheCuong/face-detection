@@ -1,7 +1,8 @@
 import './App.css';
 import Home from './components/Home';
-import Image from './components/Image';
+import Image from './components/Image2';
 import Video from './components/Video';
+import Compare from './components/Compare';
 import RegistFace from './components/RegistFace';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
@@ -15,6 +16,10 @@ function App() {
         />
         <Route
           path='/compare'
+          element={<Compare />}
+        />
+        <Route
+          path='/regist'
           element={<RegistFace />}
         />
         <Route
