@@ -1,6 +1,6 @@
 import './App.css';
 import Home from './components/Home';
-import Image from './components/Image2';
+import Image from './components/Image';
 import Video from './components/Video';
 import Compare from './components/Compare';
 import RegistFace from './components/RegistFace';
